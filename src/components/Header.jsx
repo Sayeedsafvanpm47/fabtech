@@ -102,7 +102,7 @@ const Header = () => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <Logo to="/">YourBrand</Logo>
+          <Logo to="/">Fabtech Services W.L.L</Logo>
         </motion.div>
 
         <MenuButton onClick={toggleMenu}>

@@ -13,40 +13,49 @@ import { DotLottieReact } from '@lottiefiles/dotlottie-react'
 import { Player } from '@lottiefiles/react-lottie-player';
 import { HeroSection, FeaturesSection, FeaturesGrid, FeatureCard, CTASection, Button, HeroContent, SlideContent,
    Overlay, TitleIcon ,IntroSection, IntroText, IntroGrid, IntroTitle, IntroTitleContainer, IntroImageContainer } from '../styles/pages/home';  
+import { image } from 'framer-motion/client';
 
 const Home = () => {
   const features = [
     {
       title: 'Deep Cleaning',
       description: 'From floors to ceilings, we make every corner sparkle — the kind of clean you’ll brag about.',
+      image : 'https://res.cloudinary.com/diunkrydn/image/upload/v1753191488/cleaning-mop-svgrepo-com_ugmx0q.svg'
     },
     {
       title: 'Facility Management',
       description: 'We keep your building running like a well-oiled machine — clean, safe, and efficient.',
+      image: 'https://res.cloudinary.com/diunkrydn/image/upload/v1753192087/building-svgrepo-com_uxsnqw.svg'
     },
     {
       title: 'Hospitality Support',
       description: 'Trained staff that brings 5-star service wherever you need it — with a smile.',
+      image: 'https://res.cloudinary.com/diunkrydn/image/upload/v1753192338/family-restaurant-male-clerk-svgrepo-com_cagdh2.svg'
     },
     {
       title: 'Cleaners Supply',
       description: 'Need manpower? We’ve got skilled, uniformed cleaners ready to go when you are.',
+      image: 'https://res.cloudinary.com/diunkrydn/image/upload/v1753192432/cleaner-svgrepo-com_gyxeet.svg'
     },
     {
       title: 'Pest Control',
       description: 'Bye bugs, bye stress. We eliminate pests and keep them gone — discreetly and effectively.',
+      image: 'https://res.cloudinary.com/diunkrydn/image/upload/v1753192493/rat-svgrepo-com_rawzye.svg'
     },
     {
       title: 'Construction Works',
       description: 'From renovations to fixes, post construction mess to clean up, we build it better and cleaner — no shortcuts.',
+      image: 'https://res.cloudinary.com/diunkrydn/image/upload/v1753192527/construction-crane-lifter-svgrepo-com_znrcx2.svg'
     },
     {
       title: 'Landscaping',
       description: 'Green, neat, and wow-worthy — we shape your outdoor spaces into scenes you’ll love.',
+      image: 'https://res.cloudinary.com/diunkrydn/image/upload/v1753192575/gardening-grass-svgrepo-com_mrpa8b.svg'
     },
     {
       title: 'Disinfection Services',
       description: 'Germs don’t stand a chance. We sanitize spaces with hospital-grade solutions — fast and safe.',
+      image: 'https://res.cloudinary.com/diunkrydn/image/upload/v1753192634/alcohol-disinfection-svgrepo-com_qsnbx4.svg'
     }
   ];
 
@@ -186,7 +195,10 @@ That’s Fabtech.
               transition={{ duration: 0.5, delay: index * 0.2 }}
               viewport={{ once: true }}
             >
-              <h3>{feature.title}</h3> <TitleIcon />
+             <div style={{display: 'flex', alignItems: 'center', gap: '10px', height: '4rem'}}>
+             <span><img style={{width: '40px', height: '40px', marginBottom: '20px'}} src={feature.image} alt={feature.title} /></span>
+              <h3>{feature.title}</h3> 
+            </div> 
               <p>{feature.description}</p>
             </FeatureCard>
           ))}
