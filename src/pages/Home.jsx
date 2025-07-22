@@ -1,111 +1,82 @@
 import { motion } from 'framer-motion';
-import styled from '@emotion/styled';
+
 import SEO from '../components/SEO';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
-const HeroSection = styled.section`
-  background: linear-gradient(135deg, var(--primary-black) 0%, #333 100%);
-  color: var(--primary-white);
-  padding: 6rem 0;
-  text-align: center;
-`;
+import slide1 from '../assets/images/slide1.jpg';
+import slide2 from '../assets/images/slide2.jpg';
+import slide3 from '../assets/images/slide3.jpg';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react'
 
-const HeroContent = styled.div`
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 0 1rem;
-
-  h1 {
-    font-size: 3rem;
-    margin-bottom: 1.5rem;
-    span {
-      color: var(--primary-red);
-    }
-  }
-
-  p {
-    font-size: 1.2rem;
-    margin-bottom: 2rem;
-    color: var(--secondary-beige);
-  }
-`;
-
-const Button = styled.button`
-  background-color: var(--primary-red);
-  color: var(--primary-white);
-  padding: 1rem 2rem;
-  border: none;
-  border-radius: 5px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform var(--transition-speed);
-
-  &:hover {
-    transform: translateY(-2px);
-  }
-`;
-
-const FeaturesSection = styled.section`
-  padding: 5rem 0;
-  background-color: var(--primary-white);
-`;
-
-const FeaturesGrid = styled.div`
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1rem;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
-`;
-
-const FeatureCard = styled(motion.div)`
-  background-color: white;
-  padding: 2rem;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  text-align: center;
-
-  h3 {
-    color: var(--primary-red);
-    margin-bottom: 1rem;
-  }
-
-  p {
-    color: var(--primary-black);
-  }
-`;
-
-const CTASection = styled.section`
-  background-color: var(--secondary-beige);
-  padding: 5rem 0;
-  text-align: center;
-
-  h2 {
-    color: var(--primary-black);
-    margin-bottom: 1.5rem;
-  }
-
-  p {
-    max-width: 600px;
-    margin: 0 auto 2rem;
-    color: var(--primary-black);
-  }
-`;
+import { Player } from '@lottiefiles/react-lottie-player';
+import { HeroSection, FeaturesSection, FeaturesGrid, FeatureCard, CTASection, Button, HeroContent, SlideContent,
+   Overlay, TitleIcon ,IntroSection, IntroText, IntroGrid, IntroTitle, IntroTitleContainer, IntroImageContainer } from '../styles/pages/home';  
 
 const Home = () => {
   const features = [
     {
-      title: 'Feature 1',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      title: 'Deep Cleaning',
+      description: 'From floors to ceilings, we make every corner sparkle — the kind of clean you’ll brag about.',
     },
     {
-      title: 'Feature 2',
-      description: 'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+      title: 'Facility Management',
+      description: 'We keep your building running like a well-oiled machine — clean, safe, and efficient.',
     },
     {
-      title: 'Feature 3',
-      description: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco.',
+      title: 'Hospitality Support',
+      description: 'Trained staff that brings 5-star service wherever you need it — with a smile.',
+    },
+    {
+      title: 'Cleaners Supply',
+      description: 'Need manpower? We’ve got skilled, uniformed cleaners ready to go when you are.',
+    },
+    {
+      title: 'Pest Control',
+      description: 'Bye bugs, bye stress. We eliminate pests and keep them gone — discreetly and effectively.',
+    },
+    {
+      title: 'Construction Works',
+      description: 'From renovations to fixes, post construction mess to clean up, we build it better and cleaner — no shortcuts.',
+    },
+    {
+      title: 'Landscaping',
+      description: 'Green, neat, and wow-worthy — we shape your outdoor spaces into scenes you’ll love.',
+    },
+    {
+      title: 'Disinfection Services',
+      description: 'Germs don’t stand a chance. We sanitize spaces with hospital-grade solutions — fast and safe.',
+    }
+  ];
+
+  const sliderSettings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 5000,
+    fade: true,
+    arrows: false,
+  };
+
+  const slides = [
+    {
+      image: slide1,
+      title: 'Welcome to',
+      description: 'We deliver exceptional solutions tailored to your needs',
+    },
+    {
+      image: slide2,
+      title: 'Transform Your Business',
+      description: 'Innovative solutions for modern challenges',
+    },
+    {
+      image: slide3,
+      title: 'Future of Success',
+      description: 'Partner with us for sustainable growth',
     },
   ];
 
@@ -118,30 +89,92 @@ const Home = () => {
       />
 
       <HeroSection>
-        <HeroContent>
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            Welcome to <span>YourBrand</span>
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            We deliver exceptional solutions tailored to your needs
-          </motion.p>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-          >
-            <Button>Get Started</Button>
-          </motion.div>
-        </HeroContent>
+        <Slider {...sliderSettings}>
+          {slides.map((slide, index) => (
+            <div key={index}>
+              <SlideContent style={{ backgroundImage: `url(${slide.image})` }}>
+                <Overlay />
+                <HeroContent>
+                  <motion.h1
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6 }}
+                  >
+                    {slide.title} <span>YourBrand</span>
+                  </motion.h1>
+                  <motion.p
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.2 }}
+                  >
+                    {slide.description}
+                  </motion.p>
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.4 }}
+                  >
+                    <Button>Get Started</Button>
+                  </motion.div>
+                </HeroContent>
+              </SlideContent>
+            </div>
+          ))}
+        </Slider>
       </HeroSection>
+      <IntroSection>
+        <IntroGrid>
+          <IntroImageContainer>
+            <motion.div 
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+          viewport={{ once: false }}
+        >
+          <DotLottieReact
+      src="https://res.cloudinary.com/diunkrydn/raw/upload/v1753185901/Meditation_u5y0oi.lottie"
+      loop
+      autoplay
+      style={{ width: '360px', height: '300px' }}
+    />
+          </motion.div>
+          </IntroImageContainer>
+          <IntroTitleContainer>
+          <IntroTitle>
+          <p>Step Into Fabtech</p>
+         </IntroTitle>
+         <IntroText>
+         Since 2016, we've been transforming spaces across Qatar with expert services in Cleaning, Facility Management, Civil Works, Pest Control, Hospitality, and more.
+
+From spotless homes to smart buildings, we make spaces cleaner, safer, and more efficient, all with a team that gets things done right.
+
+Clean. Build. Manage. Simplify.
+
+That’s Fabtech.
+         </IntroText>
+          </IntroTitleContainer>
+         
+        </IntroGrid>
+      </IntroSection>
+
+      <IntroSection style={{ backgroundColor: 'beige'}}>
+      
+      <IntroGrid>
+      <IntroTitleContainer>
+            <IntroTitle style={{ fontSize: '4rem', fontWeight: 'bold', color: 'var(--primary-black)' }}>
+              <p>Services We Offer</p>
+            </IntroTitle>
+          </IntroTitleContainer>
+          <DotLottieReact
+      src="https://res.cloudinary.com/diunkrydn/raw/upload/v1753187261/Services_nbruts.json"
+      loop
+      autoplay
+      style={{ width: '375px', height: '375px' }}
+    />
+         
+        </IntroGrid>
+       
+      </IntroSection>
 
       <FeaturesSection>
         <FeaturesGrid>
@@ -153,7 +186,7 @@ const Home = () => {
               transition={{ duration: 0.5, delay: index * 0.2 }}
               viewport={{ once: true }}
             >
-              <h3>{feature.title}</h3>
+              <h3>{feature.title}</h3> <TitleIcon />
               <p>{feature.description}</p>
             </FeatureCard>
           ))}
