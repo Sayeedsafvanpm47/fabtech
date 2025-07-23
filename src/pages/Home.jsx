@@ -4,6 +4,8 @@ import SEO from '../components/SEO';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import Clients from '../components/Clients';
+import { clientLogos } from '../constants/ClientLogos';
 
 import slide1 from '../assets/images/slide1.jpg';
 import slide2 from '../assets/images/slide2.jpg';
@@ -73,27 +75,29 @@ const Home = () => {
 
   const slides = [
     {
-      image: slide1,
+      image: 'https://res.cloudinary.com/diunkrydn/image/upload/v1753271854/housekeeper-holding-bottle-with-cleaner-liquid-hands_1_zvaskl.avif',
       title: 'Welcome to',
       description: 'We deliver exceptional solutions tailored to your needs',
     },
     {
-      image: slide2,
-      title: 'Transform Your Business',
-      description: 'Innovative solutions for modern challenges',
+      image: 'https://res.cloudinary.com/diunkrydn/image/upload/v1753271855/wallpaper_wauxsj.avif',
+      title: 'Transform Your Space',
+      description: 'Innovative Cleaning solutions for modern challenges',
     },
     {
-      image: slide3,
-      title: 'Future of Success',
-      description: 'Partner with us for sustainable growth',
+      image: 'https://res.cloudinary.com/diunkrydn/image/upload/v1753271855/construction-site-silhouettes_k3b2hl.avif',
+      title: 'We Build Better Spaces',
+      description: 'Partner with us for a cleaner and safer space',
     },
   ];
+
+
 
   return (
     <>
       <SEO 
         title="Home"
-        description="Welcome to YourBrand - Your trusted partner for professional services."
+        description="Welcome to Fabtech Services - Your trusted partner for professional services."
         keywords="yourbrand, services, professional, business"
       />
 
@@ -109,7 +113,7 @@ const Home = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
                   >
-                    {slide.title} <span>YourBrand</span>
+                    {slide.title} <span>Fabtech Services</span>
                   </motion.h1>
                   <motion.p
                     initial={{ opacity: 0, y: 20 }}
@@ -173,6 +177,9 @@ That’s Fabtech.
             <IntroTitle style={{ fontSize: '4rem', fontWeight: 'bold', color: 'var(--primary-black)' }}>
               <p>Services We Offer</p>
             </IntroTitle>
+            <IntroText>
+            Fabtech Services delivers expert solutions in cleaning, hospitality, disinfection, facility management, trading, and contracting. Our team ensures quality service and customer satisfaction, whether managing spaces or handling projects. We're dedicated to meeting your needs with efficiency and care.
+            </IntroText>
           </IntroTitleContainer>
           <DotLottieReact
       src="https://res.cloudinary.com/diunkrydn/raw/upload/v1753187261/Services_nbruts.json"
@@ -205,6 +212,8 @@ That’s Fabtech.
         </FeaturesGrid>
       </FeaturesSection>
 
+      <Clients logos={clientLogos} />
+
       <CTASection>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -214,7 +223,7 @@ That’s Fabtech.
         >
           <h2>Ready to Get Started?</h2>
           <p>Join us today and experience the difference our services can make for your business.</p>
-          <Button>Contact Us</Button>
+          <Button onClick={() => window.location.href = '/contact'}>Contact Us</Button>
         </motion.div>
       </CTASection>
     </>
