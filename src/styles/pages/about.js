@@ -2,9 +2,23 @@ import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
 
 export const AboutContainer = styled.div`
-  max-width: 1200px;
+  max-width: 1500px;
   margin: 0 auto;
   padding: 2rem 1rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+ padding-right: 2rem;
+ padding-left: 2rem;
+
+  background: rgba(235, 4, 4, 0.98); /* light pink with transparency */
+  backdrop-filter: blur(10px); 
+  -webkit-backdrop-filter: blur(10px); 
+
+  border: 1px solid rgba(255, 255, 255, 0.2); 
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+
+  color: #000; 
 `;
 
 export const HeroSection = styled.section`
@@ -17,7 +31,7 @@ export const HeroSection = styled.section`
     margin-bottom: 1.5rem;
 
     span {
-      color: var(--primary-red);
+      color: var(--primary-white);
     }
   }
 
@@ -44,7 +58,7 @@ export const StorySection = styled.section`
 
 export const StoryContent = styled.div`
   h2 {
-    color: var(--primary-red);
+    color: var(--primary-white);
     margin-bottom: 1.5rem;
     font-size: 2rem;
   }
@@ -58,6 +72,9 @@ export const StoryContent = styled.div`
 
 export const StoryImage = styled.div`
   background-color: var(--secondary-beige);
+
+  background-size: cover;
+  background-position: center;
   border-radius: 15px;
   height: 400px;
   position: relative;
@@ -68,6 +85,7 @@ export const ValuesSection = styled.section`
   background-color: var(--secondary-beige);
   padding: 4rem 0;
   margin: 4rem 0;
+  border-radius: 10px;
 `;
 
 export const ValuesGrid = styled.div`

@@ -17,6 +17,14 @@ const ServicesContainer = styled.div`
   border-radius: 15px;
   padding: 2rem;
   margin-bottom: 2rem;
+  backdrop-filter: blur(10px); 
+  -webkit-backdrop-filter: blur(10px); 
+
+  border: 1px solid rgba(255, 255, 255, 0.2); 
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+
+  color: #000; 
 `;
 
 const PageTitle = styled.h1`
@@ -41,7 +49,13 @@ const ServiceCard = styled(motion.div)`
   background: white;
   border-radius: 15px;
   overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+    backdrop-filter: blur(10px); 
+  -webkit-backdrop-filter: blur(10px); 
+
+  border: 1px solid rgba(7, 7, 7, 0.1); 
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(2, 4, 36, 0.2);
   transition: transform var(--transition-speed);
 
   &:hover {
@@ -153,6 +167,12 @@ const Button = styled.button`
 const Section = styled.section`
   padding: 4rem 0;
   background: ${props => props.background || 'white'};
+      backdrop-filter: blur(10px); 
+  -webkit-backdrop-filter: blur(10px); 
+
+  border: 1px solid rgba(255, 255, 255, 0.2); 
+
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
 `;
 
 const WhyChooseUsGrid = styled.div`
@@ -162,6 +182,7 @@ const WhyChooseUsGrid = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 1rem;
+
 `;
 
 const FeatureCard = styled.div`

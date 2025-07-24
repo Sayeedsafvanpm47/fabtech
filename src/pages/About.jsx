@@ -24,24 +24,24 @@ const About = () => {
     },
   ];
 
-  const team = [
-    {
-      name: 'John Doe',
-      position: 'CEO & Founder',
-    },
-    {
-      name: 'Jane Smith',
-      position: 'Creative Director',
-    },
-    {
-      name: 'Mike Johnson',
-      position: 'Technical Lead',
-    },
-    {
-      name: 'Sarah Williams',
-      position: 'Marketing Manager',
-    },
-  ];
+  // const team = [
+  //   {
+  //     name: 'Fawaz Hadi',
+  //     position: 'CEO & Founder',
+  //   },
+  //   {
+  //     name: 'Jane Smith',
+  //     position: 'Creative Director',
+  //   },
+  //   {
+  //     name: 'Mike Johnson',
+  //     position: 'Technical Lead',
+  //   },
+  //   {
+  //     name: 'Sarah Williams',
+  //     position: 'Marketing Manager',
+  //   },
+  // ];
 
   return (
     <>
@@ -110,7 +110,7 @@ const About = () => {
           </ValuesGrid>
         </ValuesSection>
 
-        <TeamSection>
+        {/* <TeamSection>
           <h2>Our <span>Team</span></h2>
           <TeamGrid>
             {team.map((member, index) => (
@@ -127,7 +127,7 @@ const About = () => {
               </TeamMember>
             ))}
           </TeamGrid>
-        </TeamSection>
+        </TeamSection> */}
       </AboutContainer>
     </>
   );
