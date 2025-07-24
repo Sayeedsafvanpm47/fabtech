@@ -2,18 +2,18 @@ import { motion } from 'framer-motion';
 import styled from '@emotion/styled';
 import SEO from '../components/SEO';
 import { useState } from 'react';
-import ServiceBookingModal from '../components/common/ServiceBookingModal';
-
+import DeepCleaningModal from '../components/modals/DeepCleaningModal';
+import PestControlModal from '../components/modals/PestControlModal';
+import CommonServiceModal from '../components/modals/CommonServiceModal';
 
 const ServicesContainer = styled.div`
-  max-width: 1000px;
+  max-width: 1500px;
   margin: 0 auto;
   padding: 2rem 1rem;
   background-color: var(--secondary-beige);
   border-radius: 15px;
   padding: 2rem;
   margin-bottom: 2rem;
- 
 `;
 
 const PageTitle = styled.h1`
@@ -148,14 +148,12 @@ const Button = styled.button`
 
 const Services = () => {
   const [selectedService, setSelectedService] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const services = [
     {
       id: 'deepcleaning',
       title: 'Deep Cleaning',
       description: "Experience a spotless transformation with Fabtech's deep cleaning services. We tackle hidden dirt, grime, and germs beyond the surface. Whether it's your home, office, or commercial space, our expert team ensures a hygienic, fresh, and professionally cleaned environment."
-
     },
     {
       id: 'facilitymanagement',
@@ -185,12 +183,12 @@ const Services = () => {
     {
       id: 'landscaping',
       title: 'Landscaping',
-      description: "Transform your outdoor space with Fabtech’s professional landscaping services. We design, install, and maintain beautiful gardens, lawns, and green areas for homes, businesses, and public spaces—bringing nature and aesthetic appeal to your surroundings.",
+      description: "Transform your outdoor space with Fabtech's professional landscaping services. We design, install, and maintain beautiful gardens, lawns, and green areas for homes, businesses, and public spaces—bringing nature and aesthetic appeal to your surroundings.",
     },
     {
       id: 'disinfection',
       title: 'Disinfection',
-      description: "Keep your environment safe with Fabtech’s disinfection services. Using hospital-grade disinfectants and advanced methods, we sanitize residential, office, and industrial spaces—eliminating viruses, bacteria, and pathogens for a healthier space.",
+      description: "Keep your environment safe with Fabtech's disinfection services. Using hospital-grade disinfectants and advanced methods, we sanitize residential, office, and industrial spaces—eliminating viruses, bacteria, and pathogens for a healthier space.",
     },
   ];
 
@@ -229,12 +227,41 @@ const Services = () => {
 
   const handleBookService = (service) => {
     setSelectedService(service);
-    setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
-    setIsModalOpen(false);
     setSelectedService(null);
+  };
+
+  const renderServiceModal = () => {
+    if (!selectedService) return null;
+
+    switch (selectedService.id) {
+      case 'deepcleaning':
+        return (
+          <DeepCleaningModal
+            isOpen={true}
+            onClose={handleCloseModal}
+            service={selectedService}
+          />
+        );
+      case 'pestcontrol':
+        return (
+          <PestControlModal
+            isOpen={true}
+            onClose={handleCloseModal}
+            service={selectedService}
+          />
+        );
+      default:
+        return (
+          <CommonServiceModal
+            isOpen={true}
+            onClose={handleCloseModal}
+            service={selectedService}
+          />
+        );
+    }
   };
 
   return (
@@ -295,11 +322,7 @@ const Services = () => {
         </PricingSection>
       </ServicesContainer>
 
-      <ServiceBookingModal
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-        service={selectedService}
-      />
+      {renderServiceModal()}
     </>
   );
 };
