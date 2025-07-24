@@ -5,7 +5,7 @@ import { FaBars, FaTimes } from 'react-icons/fa';
 import styled from '@emotion/styled';
 
 const HeaderContainer = styled.header`
-  background-color: #8B0000;
+  background-color:rgba(139, 0, 0, 0);
   opacity: 0.9;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   position: fixed;
@@ -29,7 +29,7 @@ const Nav = styled.nav`
 `;
 
 const Logo = styled(Link)`
-  color: var(--primary-white);
+  color: var(--primary-black);
   font-size: 1.5rem;
   font-weight: 700;
   text-decoration: none;
@@ -39,7 +39,7 @@ const MenuButton = styled.button`
   display: none;
   background: none;
   border: none;
-  color: var(--primary-white);
+  color: var(--primary-red);
   font-size: 1.5rem;
 
   @media (max-width: 768px) {
@@ -66,7 +66,7 @@ const NavLinks = styled.div`
 `;
 
 const NavLink = styled(Link)`
-  color: white;
+  color: red;
   text-decoration: none;
   font-weight: 500;
   position: relative;
@@ -78,7 +78,7 @@ const NavLink = styled(Link)`
     left: 0;
     width: 0;
     height: 2px;
-    background-color: yellow;
+    background-color: black;
     transition: width var(--transition-speed);
   }
 

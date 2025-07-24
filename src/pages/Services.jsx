@@ -1,11 +1,19 @@
 import { motion } from 'framer-motion';
 import styled from '@emotion/styled';
 import SEO from '../components/SEO';
+import { useState } from 'react';
+import ServiceBookingModal from '../components/common/ServiceBookingModal';
+
 
 const ServicesContainer = styled.div`
-  max-width: 1200px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 2rem 1rem;
+  background-color: var(--secondary-beige);
+  border-radius: 15px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+ 
 `;
 
 const PageTitle = styled.h1`
@@ -68,6 +76,7 @@ const ServiceContent = styled.div`
     color: var(--primary-black);
     margin-bottom: 1rem;
     line-height: 1.6;
+    height: 230px;
   }
 `;
 
@@ -133,31 +142,55 @@ const Button = styled.button`
   transition: transform var(--transition-speed);
 
   &:hover {
-    transform: translateY(-2px);
+    transform: translateY(-4px);
   }
 `;
 
 const Services = () => {
+  const [selectedService, setSelectedService] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const services = [
     {
-      id: 'service1',
-      title: 'Service 1',
-      description: 'Comprehensive solution for your business needs with cutting-edge technology.',
+      id: 'deepcleaning',
+      title: 'Deep Cleaning',
+      description: "Experience a spotless transformation with Fabtech's deep cleaning services. We tackle hidden dirt, grime, and germs beyond the surface. Whether it's your home, office, or commercial space, our expert team ensures a hygienic, fresh, and professionally cleaned environment."
+
     },
     {
-      id: 'service2',
-      title: 'Service 2',
-      description: 'Professional consulting services to help your business grow and succeed.',
+      id: 'facilitymanagement',
+      title: 'Facility Management',
+      description: "Fabtech offers complete facility management solutions tailored to your needs. From routine maintenance and cleaning to specialized technical services, we ensure smooth, safe, and efficient operations for your property—commercial, residential, or industrial—across Doha.",
     },
     {
-      id: 'service3',
-      title: 'Service 3',
-      description: 'Custom development solutions tailored to your specific requirements.',
+      id: 'hospitalitysupport',
+      title: 'Hospitality Support',
+      description: "Fabtech provides reliable hospitality support services tailored for hotels, restaurants, and event venues. Our trained staff ensures top-notch guest experiences by handling housekeeping, front desk, concierge, and more—helping you deliver excellence with every interaction.",
     },
     {
-      id: 'service4',
-      title: 'Service 4',
-      description: 'Strategic planning and implementation for optimal business outcomes.',
+      id: 'cleanerssupply',
+      title: 'Cleaners Supply',
+      description: "Need dependable cleaning staff? Fabtech supplies well-trained, professional cleaners for homes, offices, and commercial spaces. Our manpower solutions are flexible, affordable, and tailored to meet your daily, weekly, or monthly cleaning requirements across Doha.",
+    },
+    {
+      id: 'pestcontrol',
+      title: 'Pest Control',
+      description: "Protect your space with Fabtech's pest control services. Our expert team uses safe and effective methods to eliminate insects, rodents, and other pests—ensuring a clean, hygienic, and pest-free environment for residential, commercial, and industrial properties.",
+    },
+    {
+      id: 'construction',
+      title: 'Construction',
+      description: "Fabtech delivers reliable construction services from groundwork to finishing. Our skilled team handles residential and commercial projects with attention to quality, timelines, and safety—ensuring durable structures and seamless project execution across Qatar.",
+    },
+    {
+      id: 'landscaping',
+      title: 'Landscaping',
+      description: "Transform your outdoor space with Fabtech’s professional landscaping services. We design, install, and maintain beautiful gardens, lawns, and green areas for homes, businesses, and public spaces—bringing nature and aesthetic appeal to your surroundings.",
+    },
+    {
+      id: 'disinfection',
+      title: 'Disinfection',
+      description: "Keep your environment safe with Fabtech’s disinfection services. Using hospital-grade disinfectants and advanced methods, we sanitize residential, office, and industrial spaces—eliminating viruses, bacteria, and pathogens for a healthier space.",
     },
   ];
 
@@ -194,6 +227,16 @@ const Services = () => {
     },
   ];
 
+  const handleBookService = (service) => {
+    setSelectedService(service);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedService(null);
+  };
+
   return (
     <>
       <SEO
@@ -219,7 +262,7 @@ const Services = () => {
               <ServiceContent>
                 <h2>{service.title}</h2>
                 <p>{service.description}</p>
-                <Button>Learn More</Button>
+                <Button onClick={() => handleBookService(service)}>Book Service</Button>
               </ServiceContent>
             </ServiceCard>
           ))}
@@ -251,6 +294,12 @@ const Services = () => {
           </PricingContainer>
         </PricingSection>
       </ServicesContainer>
+
+      <ServiceBookingModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        service={selectedService}
+      />
     </>
   );
 };
