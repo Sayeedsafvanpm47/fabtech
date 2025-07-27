@@ -1,13 +1,16 @@
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import styled from '@emotion/styled';
 import SEO from '../components/SEO';
-import { useState } from 'react';
-import DeepCleaningModal from '../components/modals/DeepCleaningModal';
-import PestControlModal from '../components/modals/PestControlModal';
-import CommonServiceModal from '../components/modals/CommonServiceModal';
+import { useState, useEffect, lazy, Suspense } from 'react';
+import ServiceCardSkeleton from '../components/common/ServiceCardSkeleton';
 import { FaStar, FaQuoteRight, FaCheck } from 'react-icons/fa';
 import { IoMdArrowDropdown } from 'react-icons/io';
 import GoogleReviews from '../components/GoogleReviews';
+
+// Lazy load the modal components
+const DeepCleaningModal = lazy(() => import('../components/modals/DeepCleaningModal'));
+const PestControlModal = lazy(() => import('../components/modals/PestControlModal'));
+const CommonServiceModal = lazy(() => import('../components/modals/CommonServiceModal'));
 
 const ServicesContainer = styled.div`
   max-width: 1500px;
@@ -68,6 +71,17 @@ const ServiceImage = styled.div`
   background-color: var(--primary-black);
   position: relative;
   overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  &:hover img {
+    transform: scale(1.1);
+  }
 
   &::after {
     content: '';
@@ -201,6 +215,7 @@ const FeatureCard = styled.div`
   p {
     color: var(--primary-black);
     line-height: 1.6;
+  
   }
 
   svg {
@@ -336,6 +351,8 @@ const GalleryItem = styled(motion.div)`
 const Services = () => {
   const [selectedService, setSelectedService] = useState(null);
   const [openFAQ, setOpenFAQ] = useState(null);
+  const [loadedImages, setLoadedImages] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
   
   // Set this to true only when you want to show the Elfsight widget
   const showElfsightWidget = false;
@@ -344,44 +361,84 @@ const Services = () => {
     {
       id: 'deepcleaning',
       title: 'Deep Cleaning',
-      description: "Experience a spotless transformation with Fabtech's deep cleaning services. We tackle hidden dirt, grime, and germs beyond the surface. Whether it's your home, office, or commercial space, our expert team ensures a hygienic, fresh, and professionally cleaned environment."
+      description: "Experience a spotless transformation with Fabtech's deep cleaning services. We tackle hidden dirt, grime, and germs beyond the surface. Whether it's your home, office, or commercial space, our expert team ensures a hygienic, fresh, and professionally cleaned environment.",
+      image: "https://res.cloudinary.com/diunkrydn/image/upload/v1753607451/33771032_2208.i121.001.S.m005.c13.isometric_husband_hour_v7e9rz.svg"
     },
     {
       id: 'facilitymanagement',
       title: 'Facility Management',
       description: "Fabtech offers complete facility management solutions tailored to your needs. From routine maintenance and cleaning to specialized technical services, we ensure smooth, safe, and efficient operations for your property—commercial, residential, or industrial—across Doha.",
+      image: "https://res.cloudinary.com/diunkrydn/image/upload/v1753607449/12085694_20944192_mmp832.svg"
     },
     {
       id: 'hospitalitysupport',
       title: 'Hospitality Support',
       description: "Fabtech provides reliable hospitality support services tailored for hotels, restaurants, and event venues. Our trained staff ensures top-notch guest experiences by handling housekeeping, front desk, concierge, and more—helping you deliver excellence with every interaction.",
+      image: "https://res.cloudinary.com/diunkrydn/image/upload/v1753607449/13638853_5312965_jjl6fk.svg"
     },
     {
       id: 'cleanerssupply',
       title: 'Cleaners Supply',
       description: "Need dependable cleaning staff? Fabtech supplies well-trained, professional cleaners for homes, offices, and commercial spaces. Our manpower solutions are flexible, affordable, and tailored to meet your daily, weekly, or monthly cleaning requirements across Doha.",
+      image: "https://res.cloudinary.com/diunkrydn/image/upload/v1753607448/21683324_Team_of_professional_workers_in_uniform_standing_together_pyrja4.svg"
     },
     {
       id: 'pestcontrol',
       title: 'Pest Control',
       description: "Protect your space with Fabtech's pest control services. Our expert team uses safe and effective methods to eliminate insects, rodents, and other pests—ensuring a clean, hygienic, and pest-free environment for residential, commercial, and industrial properties.",
+      image: "https://res.cloudinary.com/diunkrydn/image/upload/v1753607445/10780550_19198459_s3ciie.svg"
     },
     {
       id: 'construction',
       title: 'Construction',
       description: "Fabtech delivers reliable construction services from groundwork to finishing. Our skilled team handles residential and commercial projects with attention to quality, timelines, and safety—ensuring durable structures and seamless project execution across Qatar.",
+      image: "https://res.cloudinary.com/diunkrydn/image/upload/v1753607447/13295440_5165970_ezr2r0.svg"
     },
     {
       id: 'landscaping',
       title: 'Landscaping',
       description: "Transform your outdoor space with Fabtech's professional landscaping services. We design, install, and maintain beautiful gardens, lawns, and green areas for homes, businesses, and public spaces—bringing nature and aesthetic appeal to your surroundings.",
+      image: "https://res.cloudinary.com/diunkrydn/image/upload/v1753607446/7943051_3808782_uat65c.svg"
     },
     {
       id: 'disinfection',
       title: 'Disinfection',
       description: "Keep your environment safe with Fabtech's disinfection services. Using hospital-grade disinfectants and advanced methods, we sanitize residential, office, and industrial spaces—eliminating viruses, bacteria, and pathogens for a healthier space.",
+      image: "https://res.cloudinary.com/diunkrydn/image/upload/v1753607453/8488009_3933943_haj2kt.svg"
     },
   ];
+
+  useEffect(() => {
+    // Preload all service images
+    const loadImages = async () => {
+      setIsLoading(true);
+      const imagePromises = services.map(service => {
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.src = service.image;
+          img.onload = () => {
+            setLoadedImages(prev => ({
+              ...prev,
+              [service.id]: true
+            }));
+            resolve();
+          };
+          img.onerror = () => {
+            setLoadedImages(prev => ({
+              ...prev,
+              [service.id]: false
+            }));
+            resolve();
+          };
+        });
+      });
+
+      await Promise.all(imagePromises);
+      setIsLoading(false);
+    };
+
+    loadImages();
+  }, []);
 
   const pricingPlans = [
     {
@@ -486,12 +543,10 @@ const Services = () => {
   ];
 
   const galleryImages = [
-    { url: "https://res.cloudinary.com/diunkrydn/image/upload/v1753271854/housekeeper-holding-bottle-with-cleaner-liquid-hands_1_zvaskl.avif", alt: "Professional cleaning team" },
-    { url: "https://res.cloudinary.com/diunkrydn/image/upload/v1753271854/housekeeper-holding-bottle-with-cleaner-liquid-hands_1_zvaskl.avif", alt: "Deep cleaning service" },
-    { url: "https://res.cloudinary.com/diunkrydn/image/upload/v1753271854/housekeeper-holding-bottle-with-cleaner-liquid-hands_1_zvaskl.avif", alt: "Pest control service" },
-    { url: "https://res.cloudinary.com/diunkrydn/image/upload/v1753271854/housekeeper-holding-bottle-with-cleaner-liquid-hands_1_zvaskl.avif", alt: "Facility management" },
-    { url: "https://res.cloudinary.com/diunkrydn/image/upload/v1753271854/housekeeper-holding-bottle-with-cleaner-liquid-hands_1_zvaskl.avif", alt: "Construction service" },
-    { url: "https://res.cloudinary.com/diunkrydn/image/upload/v1753271854/housekeeper-holding-bottle-with-cleaner-liquid-hands_1_zvaskl.avif", alt: "Landscaping project" }
+    { url: "https://res.cloudinary.com/diunkrydn/image/upload/v1753604916/WhatsApp_Image_2025-07-27_at_11.04.07_1_pa6bec.jpg", alt: "Professional cleaning team" },
+    { url: "https://res.cloudinary.com/diunkrydn/image/upload/v1753604916/WhatsApp_Image_2025-07-27_at_11.04.07_2_i07dgs.jpg", alt: "Deep cleaning service" },
+    { url: "https://res.cloudinary.com/diunkrydn/image/upload/v1753604916/WhatsApp_Image_2025-07-27_at_11.04.06_jyow43.jpg", alt: "Pest control service" },
+    { url: "https://res.cloudinary.com/diunkrydn/image/upload/v1753604917/WhatsApp_Image_2025-07-27_at_11.04.07_j4r6qn.jpg", alt: "Facility management" },
   ];
 
   const handleBookService = (service) => {
@@ -505,32 +560,38 @@ const Services = () => {
   const renderServiceModal = () => {
     if (!selectedService) return null;
 
-    switch (selectedService.id) {
-      case 'deepcleaning':
-        return (
-          <DeepCleaningModal
-            isOpen={true}
-            onClose={handleCloseModal}
-            service={selectedService}
-          />
-        );
-      case 'pestcontrol':
-        return (
-          <PestControlModal
-            isOpen={true}
-            onClose={handleCloseModal}
-            service={selectedService}
-          />
-        );
-      default:
-        return (
-          <CommonServiceModal
-            isOpen={true}
-            onClose={handleCloseModal}
-            service={selectedService}
-          />
-        );
-    }
+    return (
+      <Suspense fallback={null}>
+        {(() => {
+          switch (selectedService.id) {
+            case 'deepcleaning':
+              return (
+                <DeepCleaningModal
+                  isOpen={true}
+                  onClose={handleCloseModal}
+                  service={selectedService}
+                />
+              );
+            case 'pestcontrol':
+              return (
+                <PestControlModal
+                  isOpen={true}
+                  onClose={handleCloseModal}
+                  service={selectedService}
+                />
+              );
+            default:
+              return (
+                <CommonServiceModal
+                  isOpen={true}
+                  onClose={handleCloseModal}
+                  service={selectedService}
+                />
+              );
+          }
+        })()}
+      </Suspense>
+    );
   };
 
   return (
@@ -554,12 +615,24 @@ const Services = () => {
               viewport={{ once: true }}
               id={service.id}
             >
-              <ServiceImage />
-              <ServiceContent>
-                <h2>{service.title}</h2>
-                <p>{service.description}</p>
-                <Button onClick={() => handleBookService(service)}>Book Service</Button>
-              </ServiceContent>
+              {isLoading ? (
+                <ServiceCardSkeleton />
+              ) : (
+                <>
+                  <ServiceImage>
+                    <img 
+                      src={service.image} 
+                      alt={service.title}
+                      loading="lazy"
+                    />
+                  </ServiceImage>
+                  <ServiceContent>
+                    <h2>{service.title}</h2>
+                    <p style={{height: "250px", overflow: "hidden"}}>{service.description}</p>
+                    <Button onClick={() => handleBookService(service)}>Book Service</Button>
+                  </ServiceContent>
+                </>
+              )}
             </ServiceCard>
           ))}
         </ServicesGrid>
