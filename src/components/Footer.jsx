@@ -75,7 +75,7 @@ const Footer = () => {
       <FooterContent>
         <FooterSection>
           <h3>About Us</h3>
-          <p>We are dedicated to providing exceptional services and solutions to meet your needs. Your success is our priority.</p>
+          <p>We are dedicated to providing exceptional cleaning and facility management services in Qatar.</p>
           <SocialLinks>
             <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
               <FaFacebook />
@@ -99,32 +99,36 @@ const Footer = () => {
             <li><Link to="/services">Services</Link></li>
             <li><Link to="/about">About</Link></li>
             <li><Link to="/contact">Contact</Link></li>
+            <li><Link to="/blog">Blog</Link></li>
           </ul>
         </FooterSection>
 
         <FooterSection>
           <h3>Services</h3>
           <ul>
-            <li><Link to="/services#service1">Service 1</Link></li>
-            <li><Link to="/services#service2">Service 2</Link></li>
-            <li><Link to="/services#service3">Service 3</Link></li>
-            <li><Link to="/services#service4">Service 4</Link></li>
+            <li><Link to="/services">Deep Cleaning</Link></li>
+            <li><Link to="/services">Facility Management</Link></li>
+            <li><Link to="/services">Hospitality</Link></li>
+            <li><Link to="/services">Cleaners Supply</Link></li>
+            <li><Link to="/services">Pest Control</Link></li>
+            <li><Link to="/services">Construction</Link></li>
+            <li><Link to="/services">Landscaping</Link></li>
+            <li><Link to="/services">Disinfection</Link></li>
+         
           </ul>
         </FooterSection>
 
         <FooterSection>
           <h3>Contact Info</h3>
-          <ul>
-            <li>123 Business Street</li>
-            <li>City, State 12345</li>
-            <li>Phone: (123) 456-7890</li>
-            <li>Email: info@yourbrand.com</li>
-          </ul>
+          <p style={{ lineHeight: '1.6', margin: 0 }}>
+              Madina Khalifa (S) Building 138, Zone 34, Street 362 <br></br>Al Rabiah Building 1 
+              Second floor S14, Doha
+              </p>
         </FooterSection>
       </FooterContent>
 
       <Copyright>
-        <p>&copy; {new Date().getFullYear()} YourBrand. All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()} Fabtech Services W.L.L. All rights reserved.</p>
       </Copyright>
     </FooterContainer>
   );

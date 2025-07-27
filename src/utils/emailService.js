@@ -18,6 +18,21 @@ const getLocationName = async (latitude, longitude) => {
   }
 };
 
+export const sendContactEmail = async (contactData) => {
+  try {
+    const response = await emailjs.send(
+      EMAIL_SERVICE_ID,
+      EMAIL_TEMPLATE_ID,
+      contactData,
+      EMAIL_PUBLIC_KEY
+    );
+    return response;
+  } catch (error) {
+    console.error('Failed to send contact email:', error);
+    throw error;
+  }
+};
+
 export const sendBookingEmail = async (bookingData) => {
   try {
     // Format the location information with Google Maps link

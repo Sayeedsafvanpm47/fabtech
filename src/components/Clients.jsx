@@ -9,6 +9,7 @@ const ClientsSection = styled.section`
   background-color: #ffffff;
   overflow: hidden;
   max-width: 100%;
+  border-radius: 15px;
 `;
 
 const SectionTitle = styled.h2`
