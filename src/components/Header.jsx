@@ -115,6 +115,7 @@ const Header = () => {
             { path: '/services', label: 'Services' },
             { path: '/about', label: 'About' },
             { path: '/contact', label: 'Contact' },
+            { path: '/blog', label: 'Blog' },
           ].map((link) => (
             <motion.div
               key={link.path}

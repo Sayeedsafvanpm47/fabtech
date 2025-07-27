@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
 import { FaLock, FaUser } from 'react-icons/fa';
+import { adminAuth } from '../utils/supabase';
 
 const LoginContainer = styled.div`
   max-width: 400px;
@@ -85,15 +86,9 @@ const ErrorMessage = styled(motion.div)`
   margin-top: 1rem;
 `;
 
-// Hardcoded credentials (in a real app, these would be in a secure backend)
-const ADMIN_CREDENTIALS = {
-  username: 'admin',
-  password: 'fabtech123'
-};
-
 const AdminLogin = () => {
   const [formData, setFormData] = useState({
-    username: '',
+    email: '',
     password: ''
   });
   const [error, setError] = useState('');
@@ -114,21 +109,19 @@ const AdminLogin = () => {
     setIsLoading(true);
     setError('');
 
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    if (
-      formData.username === ADMIN_CREDENTIALS.username &&
-      formData.password === ADMIN_CREDENTIALS.password
-    ) {
-      // Store admin session
-      localStorage.setItem('isAdminLoggedIn', 'true');
-      navigate('/post-blog');
-    } else {
-      setError('Invalid username or password');
+    try {
+      const { user } = await adminAuth.signIn(formData.email, formData.password);
+      
+      if (user) {
+        localStorage.setItem('isAdminLoggedIn', 'true');
+        navigate('/post-blog');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      setError('Invalid email or password');
+    } finally {
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
   };
 
   return (
@@ -143,10 +136,10 @@ const AdminLogin = () => {
           <InputGroup>
             <FaUser />
             <input
-              type="text"
-              name="username"
-              placeholder="Username"
-              value={formData.username}
+              type="email"
+              name="email"
+              placeholder="Email"
+              value={formData.email}
               onChange={handleChange}
               required
             />

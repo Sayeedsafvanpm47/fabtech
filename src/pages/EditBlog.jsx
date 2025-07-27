@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
-import { blogPostsTable, adminAuth } from '../utils/supabase';
+import { blogPostsTable, supabase } from '../utils/supabase';
 
 const Container = styled.div`
   max-width: 800px;
@@ -72,18 +72,14 @@ const Button = styled.button`
   }
 `;
 
-const LogoutButton = styled(Button)`
-  background: #333;
-  margin-top: 1rem;
-`;
-
 const ErrorMessage = styled.div`
   color: #dc3545;
   text-align: center;
   margin-top: 1rem;
 `;
 
-const PostBlog = () => {
+const EditBlog = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     title: '',
@@ -94,22 +90,39 @@ const PostBlog = () => {
   });
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const checkAuth = async () => {
-      try {
-        const session = await adminAuth.getCurrentSession();
-        if (!session) {
-          navigate('/admin-login');
-        }
-      } catch (error) {
-        console.error('Auth check error:', error);
+      const isLoggedIn = localStorage.getItem('isAdminLoggedIn');
+      if (!isLoggedIn) {
         navigate('/admin-login');
+        return;
+      }
+    };
+
+    const fetchPost = async () => {
+      try {
+        console.log('Fetching post for editing:', id);
+        const post = await blogPostsTable.getPostById(id);
+        console.log('Fetched post:', post);
+        
+        if (!post) {
+          throw new Error('Post not found');
+        }
+
+        setFormData(post);
+      } catch (err) {
+        console.error('Error fetching post:', err);
+        setError('Failed to load post. Please try again.');
+      } finally {
+        setIsLoading(false);
       }
     };
 
     checkAuth();
-  }, [navigate]);
+    fetchPost();
+  }, [id, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -137,32 +150,27 @@ const PostBlog = () => {
     setError('');
 
     try {
-      console.log('Attempting to create post with data:', formData);
-      const result = await blogPostsTable.createPost(formData);
-      console.log('Post created successfully:', result);
+      await blogPostsTable.updatePost(id, formData);
       navigate('/blog');
-    } catch (error) {
-      console.error('Detailed error:', error);
-      setError(error.message || 'Failed to create blog post. Please try again.');
+    } catch (err) {
+      console.error('Error updating post:', err);
+      setError(err.message || 'Failed to update blog post. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleLogout = async () => {
-    try {
-      await adminAuth.signOut();
-      localStorage.removeItem('isAdminLoggedIn');
-      navigate('/admin-login');
-    } catch (error) {
-      console.error('Logout error:', error);
-      setError('Failed to logout. Please try again.');
-    }
-  };
+  if (isLoading) {
+    return (
+      <Container>
+        <Title>Loading...</Title>
+      </Container>
+    );
+  }
 
   return (
     <Container>
-      <Title>Create New <span>Blog Post</span></Title>
+      <Title>Edit <span>Blog Post</span></Title>
       <Form onSubmit={handleSubmit}>
         <FormGroup>
           <label>Title</label>
@@ -224,17 +232,13 @@ const PostBlog = () => {
         </FormGroup>
 
         <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? 'Publishing...' : 'Publish Post'}
+          {isSubmitting ? 'Updating...' : 'Update Post'}
         </Button>
 
         {error && <ErrorMessage>{error}</ErrorMessage>}
       </Form>
-
-      <LogoutButton type="button" onClick={handleLogout}>
-        Logout
-      </LogoutButton>
     </Container>
   );
 };
 
-export default PostBlog; 
+export default EditBlog; 

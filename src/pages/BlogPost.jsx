@@ -1,7 +1,9 @@
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
-import { FaUser, FaCalendar, FaArrowLeft, FaTags } from 'react-icons/fa';
+import { FaUser, FaCalendar, FaArrowLeft, FaTags, FaEdit, FaTrash, FaClock } from 'react-icons/fa';
+import { blogPostsTable } from '../utils/supabase';
 import SEO from '../components/SEO';
 
 const BlogPostContainer = styled.div`
@@ -25,8 +27,47 @@ const BackButton = styled(motion.button)`
   transition: all 0.3s ease;
 
   &:hover {
-    background: rgba(var(--primary-red-rgb), 0.1);
+    background: rgba(220, 38, 127, 0.1);
   }
+`;
+
+const AdminControls = styled.div`
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+  border: 1px solid #e9ecef;
+`;
+
+const AdminButton = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  ${props => props.edit ? `
+    background: #007bff;
+    color: white;
+    
+    &:hover {
+      background: #0056b3;
+    }
+  ` : `
+    background: #dc3545;
+    color: white;
+    
+    &:hover {
+      background: #c82333;
+    }
+  `}
 `;
 
 const Header = styled.div`
@@ -34,10 +75,15 @@ const Header = styled.div`
 `;
 
 const Title = styled.h1`
-  font-size: 2.5rem;
+  font-size: 2.8rem;
   color: var(--primary-black);
   margin-bottom: 1rem;
-  line-height: 1.3;
+  line-height: 1.2;
+  font-weight: 700;
+  
+  @media (max-width: 768px) {
+    font-size: 2.2rem;
+  }
 `;
 
 const MetaInfo = styled.div`
@@ -46,11 +92,17 @@ const MetaInfo = styled.div`
   color: #666;
   margin-bottom: 1.5rem;
   flex-wrap: wrap;
+  align-items: center;
 
   div {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    font-size: 0.95rem;
+  }
+  
+  @media (max-width: 768px) {
+    gap: 1rem;
   }
 `;
 
@@ -60,23 +112,35 @@ const Category = styled.div`
   gap: 0.5rem;
   background: var(--primary-red);
   color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
+  padding: 0.6rem 1.2rem;
+  border-radius: 25px;
   font-size: 0.9rem;
+  font-weight: 600;
   margin-bottom: 1.5rem;
+  box-shadow: 0 2px 8px rgba(220, 38, 127, 0.3);
 `;
 
 const FeaturedImage = styled.div`
   width: 100%;
-  height: 400px;
-  border-radius: 15px;
+  height: 450px;
+  border-radius: 20px;
   overflow: hidden;
-  margin-bottom: 2rem;
+  margin-bottom: 3rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+  
+  &:hover img {
+    transform: scale(1.02);
+  }
+  
+  @media (max-width: 768px) {
+    height: 250px;
   }
 `;
 
@@ -84,191 +148,384 @@ const Content = styled.div`
   color: #444;
   line-height: 1.8;
   font-size: 1.1rem;
+  max-width: none;
 
   p {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.8rem;
+    text-align: justify;
   }
 
-  h2 {
+  h1, h2, h3, h4, h5, h6 {
     color: var(--primary-black);
-    font-size: 1.8rem;
-    margin: 2rem 0 1rem;
+    margin: 2.5rem 0 1.2rem;
+    font-weight: 700;
+    line-height: 1.3;
   }
+
+  h1 { font-size: 2.2rem; }
+  h2 { font-size: 1.9rem; }
+  h3 { font-size: 1.6rem; }
+  h4 { font-size: 1.4rem; }
+  h5 { font-size: 1.2rem; }
+  h6 { font-size: 1.1rem; }
 
   ul, ol {
-    margin-bottom: 1.5rem;
-    padding-left: 1.5rem;
+    margin-bottom: 1.8rem;
+    padding-left: 2rem;
 
     li {
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.8rem;
+      line-height: 1.7;
     }
   }
+
+  blockquote {
+    border-left: 4px solid var(--primary-red);
+    padding: 1rem 1.5rem;
+    margin: 2rem 0;
+    background: #f8f9fa;
+    border-radius: 0 8px 8px 0;
+    font-style: italic;
+    color: #555;
+  }
+
+  code {
+    background: #f1f3f4;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+  }
+
+  pre {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 1.5rem 0;
+    
+    code {
+      background: none;
+      padding: 0;
+    }
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 1.5rem 0;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  }
+
+  a {
+    color: var(--primary-red);
+    text-decoration: none;
+    font-weight: 500;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+`;
+
+const LoadingSpinner = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  
+  div {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid var(--primary-red);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+`;
+
+const ErrorMessage = styled.div`
+  text-align: center;
+  padding: 2rem;
+  background: #f8d7da;
+  color: #721c24;
+  border-radius: 8px;
+  margin: 2rem 0;
 `;
 
 const RelatedPosts = styled.div`
   margin-top: 4rem;
   padding-top: 2rem;
-  border-top: 1px solid #eee;
+  border-top: 2px solid #f0f0f0;
 
   h3 {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     color: var(--primary-black);
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
+    font-weight: 700;
   }
 `;
 
 const RelatedGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
 `;
 
 const RelatedPost = styled(motion.div)`
   background: white;
-  border-radius: 10px;
+  border-radius: 15px;
   overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  }
 
   img {
     width: 100%;
-    height: 150px;
+    height: 180px;
     object-fit: cover;
   }
 
   .content {
-    padding: 1rem;
+    padding: 1.5rem;
 
     h4 {
       color: var(--primary-black);
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.8rem;
       font-size: 1.1rem;
+      font-weight: 600;
+      line-height: 1.4;
     }
 
-    p {
+    .meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       color: #666;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
+      margin-top: 1rem;
+    }
+
+    .category {
+      background: rgba(220, 38, 127, 0.1);
+      color: var(--primary-red);
+      padding: 0.2rem 0.6rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
     }
   }
 `;
-
-// Sample blog posts data (you can move this to a separate file)
-const blogPosts = [
-  {
-    id: 1,
-    title: 'The Ultimate Guide to Deep Cleaning Your Home',
-    excerpt: 'Discover professional tips and tricks for achieving a spotless home. Learn about the most effective cleaning techniques and products.',
-    content: `
-      <h2>Introduction</h2>
-      <p>Deep cleaning your home is more than just a regular cleaning routine. It's about getting into those often-neglected areas and ensuring a truly clean and healthy living environment.</p>
-
-      <h2>Essential Deep Cleaning Tools</h2>
-      <ul>
-        <li>High-quality microfiber cloths</li>
-        <li>Multi-purpose cleaning solutions</li>
-        <li>Scrub brushes of various sizes</li>
-        <li>Steam cleaner for tough stains</li>
-        <li>Extendable dusters for high areas</li>
-      </ul>
-
-      <h2>Room-by-Room Deep Cleaning Guide</h2>
-      <p>Each room requires specific attention to detail. Here's how to approach each space in your home:</p>
-
-      <h3>Kitchen Deep Cleaning</h3>
-      <p>The kitchen is one of the most important areas to deep clean. Focus on:</p>
-      <ul>
-        <li>Cleaning inside and behind appliances</li>
-        <li>Degreasing hood vents and filters</li>
-        <li>Sanitizing countertops and cutting boards</li>
-        <li>Deep cleaning the sink and disposal</li>
-      </ul>
-
-      <h3>Bathroom Deep Cleaning</h3>
-      <p>Bathrooms require special attention to prevent mold and ensure proper sanitation:</p>
-      <ul>
-        <li>Scrubbing grout lines</li>
-        <li>Cleaning exhaust fans</li>
-        <li>Disinfecting all surfaces</li>
-        <li>Treating any mold or mildew</li>
-      </ul>
-
-      <h2>Professional Tips and Tricks</h2>
-      <p>Here are some expert tips to make your deep cleaning more effective:</p>
-      <ul>
-        <li>Always work from top to bottom in any room</li>
-        <li>Use natural cleaning solutions when possible</li>
-        <li>Pay attention to high-touch areas</li>
-        <li>Don't forget often-overlooked spots like light switches and doorknobs</li>
-      </ul>
-    `,
-    image: 'https://res.cloudinary.com/diunkrydn/image/upload/v1753607451/33771032_2208.i121.001.S.m005.c13.isometric_husband_hour_v7e9rz.svg',
-    category: 'Cleaning Tips',
-    author: 'Sarah Johnson',
-    date: 'March 15, 2024',
-    slug: 'ultimate-guide-deep-cleaning'
-  },
-  // ... other blog posts
-];
 
 const BlogPost = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
   
-  // Find the current post
-  const post = blogPosts.find(p => p.slug === slug);
+  const [post, setPost] = useState(null);
+  const [relatedPosts, setRelatedPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
-  // Find related posts (same category, excluding current post)
-  const relatedPosts = blogPosts
-    .filter(p => p.category === post?.category && p.id !== post?.id)
-    .slice(0, 3);
+  useEffect(() => {
+    const checkAdminStatus = () => {
+      const adminStatus = localStorage.getItem('isAdminLoggedIn') === 'true';
+      setIsAdmin(adminStatus);
+    };
 
-  if (!post) {
+    const fetchPost = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        // Fetch all posts to find the current one and related posts
+        const allPosts = await blogPostsTable.getAllPosts();
+        
+        if (!Array.isArray(allPosts)) {
+          throw new Error('Invalid data format received from server');
+        }
+
+        // Find current post by slug
+        const currentPost = allPosts.find(p => p.slug === slug);
+        
+        if (!currentPost) {
+          throw new Error('Post not found');
+        }
+
+        setPost(currentPost);
+
+        // Find related posts (same category, excluding current post)
+        const related = allPosts
+          .filter(p => 
+            (p.category || 'General') === (currentPost.category || 'General') && 
+            p.id !== currentPost.id
+          )
+          .slice(0, 3);
+        
+        setRelatedPosts(related);
+
+      } catch (err) {
+        console.error('Error fetching post:', err);
+        setError(err.message || 'Failed to load blog post');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkAdminStatus();
+    fetchPost();
+  }, [slug]);
+
+  const handleDelete = async () => {
+    if (!window.confirm('Are you sure you want to delete this post? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      await blogPostsTable.deletePost(post.id);
+      alert('Post deleted successfully!');
+      navigate('/blog');
+    } catch (err) {
+      console.error('Error deleting post:', err);
+      alert('Failed to delete post. Please try again.');
+    }
+  };
+
+  const handleEdit = () => {
+    navigate(`/edit-blog/${post.id}`);
+  };
+
+  const calculateReadingTime = (content) => {
+    if (!content) return 1;
+    const wordsPerMinute = 200;
+    const words = content.split(' ').length;
+    return Math.ceil(words / wordsPerMinute);
+  };
+
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
+  const formatContent = (content) => {
+    if (!content) return '';
+    
+    // Convert line breaks to paragraphs if content doesn't have HTML tags
+    if (!content.includes('<') && !content.includes('>')) {
+      return content
+        .split('\n\n')
+        .map(paragraph => paragraph.trim())
+        .filter(paragraph => paragraph.length > 0)
+        .map(paragraph => `<p>${paragraph.replace(/\n/g, '<br>')}</p>`)
+        .join('');
+    }
+    
+    return content;
+  };
+
+  if (loading) {
     return (
       <BlogPostContainer>
         <BackButton onClick={() => navigate('/blog')}>
           <FaArrowLeft /> Back to Blog
         </BackButton>
-        <h1>Post not found</h1>
+        <LoadingSpinner>
+          <div></div>
+        </LoadingSpinner>
       </BlogPostContainer>
     );
   }
+
+  if (error || !post) {
+    return (
+      <BlogPostContainer>
+        <BackButton onClick={() => navigate('/blog')}>
+          <FaArrowLeft /> Back to Blog
+        </BackButton>
+        <ErrorMessage>
+          <h2>Post Not Found</h2>
+          <p>{error || 'The blog post you are looking for does not exist.'}</p>
+        </ErrorMessage>
+      </BlogPostContainer>
+    );
+  }
+
+  const readingTime = calculateReadingTime(post.content);
+  const fallbackImage = 'https://res.cloudinary.com/diunkrydn/image/upload/v1753607451/33771032_2208.i121.001.S.m005.c13.isometric_husband_hour_v7e9rz.svg';
 
   return (
     <>
       <SEO
         title={`${post.title} - Blog`}
-        description={post.excerpt}
-        keywords={`${post.category.toLowerCase()}, blog, tips, guide`}
+        description={post.meta_description || post.title}
+        keywords={`${(post.category || 'general').toLowerCase()}, blog, tips, guide`}
       />
 
       <BlogPostContainer>
-        <BackButton onClick={() => navigate('/blog')}>
+        <BackButton 
+          onClick={() => navigate('/blog')}
+          whileHover={{ x: -5 }}
+          whileTap={{ scale: 0.95 }}
+        >
           <FaArrowLeft /> Back to Blog
         </BackButton>
+
+        {isAdmin && (
+          <AdminControls>
+            <AdminButton edit onClick={handleEdit}>
+              <FaEdit /> Edit Post
+            </AdminButton>
+            <AdminButton onClick={handleDelete}>
+              <FaTrash /> Delete Post
+            </AdminButton>
+          </AdminControls>
+        )}
 
         <Header>
           <Title>{post.title}</Title>
           <MetaInfo>
             <div>
-              <FaUser />
-              <span>{post.author}</span>
+              <FaCalendar />
+              <span>{formatDate(post.created_at)}</span>
             </div>
             <div>
-              <FaCalendar />
-              <span>{post.date}</span>
+              <FaClock />
+              <span>{readingTime} min read</span>
             </div>
           </MetaInfo>
-          <Category>
-            <FaTags />
-            {post.category}
-          </Category>
+          {post.category && (
+            <Category>
+              <FaTags />
+              {post.category}
+            </Category>
+          )}
         </Header>
 
         <FeaturedImage>
-          <img src={post.image} alt={post.title} />
+          <img 
+            src={post.image_url || fallbackImage} 
+            alt={post.title}
+            onError={(e) => {
+              e.target.src = fallbackImage;
+            }}
+          />
         </FeaturedImage>
 
-        <Content dangerouslySetInnerHTML={{ __html: post.content }} />
+        <Content dangerouslySetInnerHTML={{ __html: formatContent(post.content) }} />
 
         {relatedPosts.length > 0 && (
           <RelatedPosts>
@@ -279,11 +536,23 @@ const BlogPost = () => {
                   key={relatedPost.id}
                   onClick={() => navigate(`/blog/${relatedPost.slug}`)}
                   whileHover={{ y: -5 }}
+                  whileTap={{ scale: 0.98 }}
                 >
-                  <img src={relatedPost.image} alt={relatedPost.title} />
+                  <img 
+                    src={relatedPost.image_url || fallbackImage} 
+                    alt={relatedPost.title}
+                    onError={(e) => {
+                      e.target.src = fallbackImage;
+                    }}
+                  />
                   <div className="content">
                     <h4>{relatedPost.title}</h4>
-                    <p>{relatedPost.date}</p>
+                    <div className="meta">
+                      <span>{formatDate(relatedPost.created_at)}</span>
+                      {relatedPost.category && (
+                        <span className="category">{relatedPost.category}</span>
+                      )}
+                    </div>
                   </div>
                 </RelatedPost>
               ))}
@@ -295,4 +564,4 @@ const BlogPost = () => {
   );
 };
 
-export default BlogPost; 
+export default BlogPost;

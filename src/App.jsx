@@ -12,7 +12,9 @@ import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
 import AdminLogin from './pages/AdminLogin';
 import PostBlog from './pages/PostBlog';
+import EditBlog from './pages/EditBlog';
 import ChatWidget from './components/ChatWidget';
+import './App.css';
 
 const MainContent = styled.main`
   margin-top: 80px; // Height of the fixed header
@@ -38,6 +40,7 @@ function App() {
             <Route path="/blog/:slug" element={<BlogPost />} />
             <Route path="/admin-login" element={<AdminLogin />} />
             <Route path="/post-blog" element={<PostBlog />} />
+            <Route path="/edit-blog/:id" element={<EditBlog />} />
           </Routes>
         </MainContent>
         <Footer />
