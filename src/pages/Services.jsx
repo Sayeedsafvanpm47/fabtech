@@ -6,6 +6,8 @@ import ServiceCardSkeleton from '../components/common/ServiceCardSkeleton';
 import { FaStar, FaQuoteRight, FaCheck } from 'react-icons/fa';
 import { IoMdArrowDropdown } from 'react-icons/io';
 import GoogleReviews from '../components/GoogleReviews';
+import { LottieContainer } from '../styles/pages/home';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
 // Lazy load the modal components
 const DeepCleaningModal = lazy(() => import('../components/modals/DeepCleaningModal'));
@@ -49,26 +51,26 @@ const ServicesGrid = styled.div`
 `;
 
 const ServiceCard = styled(motion.div)`
-  background: white;
+  background: beige;
   border-radius: 15px;
   overflow: hidden;
 
     backdrop-filter: blur(10px); 
   -webkit-backdrop-filter: blur(10px); 
 
-  border: 1px solid rgba(7, 7, 7, 0.1); 
-  border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(2, 4, 36, 0.2);
+  border: 1px solid rgba(7, 7, 7, 0); 
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(2, 4, 36, 0.25);
   transition: transform var(--transition-speed);
 
   &:hover {
-    transform: translateY(-5px);
+    transform: translateY(-20px);
   }
 `;
 
 const ServiceImage = styled.div`
   height: 200px;
-  background-color: var(--primary-black);
+  
   position: relative;
   overflow: hidden;
 
@@ -90,7 +92,7 @@ const ServiceImage = styled.div`
     left: 0;
     right: 0;
     height: 30%;
-    background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+  
   }
 `;
 
@@ -321,6 +323,13 @@ const FAQItem = styled.div`
   }
 `;
 
+const PageSubtitle = styled.p`
+  text-align: center;
+  color: var(--primary-black);
+  margin-bottom: 3rem;
+  font-size: 1.5rem;
+`;
+
 const GalleryGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -358,53 +367,54 @@ const Services = () => {
   const showElfsightWidget = false;
 
   const services = [
+
     {
       id: 'deepcleaning',
       title: 'Deep Cleaning',
       description: "Experience a spotless transformation with Fabtech's deep cleaning services. We tackle hidden dirt, grime, and germs beyond the surface. Whether it's your home, office, or commercial space, our expert team ensures a hygienic, fresh, and professionally cleaned environment.",
-      image: "https://res.cloudinary.com/diunkrydn/image/upload/v1753607451/33771032_2208.i121.001.S.m005.c13.isometric_husband_hour_v7e9rz.svg"
+      image: "https://res.cloudinary.com/diunkrydn/raw/upload/v1753776695/Cleaning_1_pykqo2.lottie"
     },
     {
       id: 'facilitymanagement',
       title: 'Facility Management',
       description: "Fabtech offers complete facility management solutions tailored to your needs. From routine maintenance and cleaning to specialized technical services, we ensure smooth, safe, and efficient operations for your property—commercial, residential, or industrial—across Doha.",
-      image: "https://res.cloudinary.com/diunkrydn/image/upload/v1753607449/12085694_20944192_mmp832.svg"
+      image: "https://res.cloudinary.com/diunkrydn/raw/upload/v1753777591/aintenance_z06gek.lottie"
     },
     {
       id: 'hospitalitysupport',
       title: 'Hospitality Support',
       description: "Fabtech provides reliable hospitality support services tailored for hotels, restaurants, and event venues. Our trained staff ensures top-notch guest experiences by handling housekeeping, front desk, concierge, and more—helping you deliver excellence with every interaction.",
-      image: "https://res.cloudinary.com/diunkrydn/image/upload/v1753607449/13638853_5312965_jjl6fk.svg"
+      image: "https://res.cloudinary.com/diunkrydn/raw/upload/v1753777797/waiter_atctjk.lottie"
     },
     {
       id: 'cleanerssupply',
       title: 'Cleaners Supply',
       description: "Need dependable cleaning staff? Fabtech supplies well-trained, professional cleaners for homes, offices, and commercial spaces. Our manpower solutions are flexible, affordable, and tailored to meet your daily, weekly, or monthly cleaning requirements across Doha.",
-      image: "https://res.cloudinary.com/diunkrydn/image/upload/v1753607448/21683324_Team_of_professional_workers_in_uniform_standing_together_pyrja4.svg"
+      image: "https://res.cloudinary.com/diunkrydn/raw/upload/v1753777907/Sweeping_Floor_vr4kms.lottie"
     },
     {
       id: 'pestcontrol',
       title: 'Pest Control',
       description: "Protect your space with Fabtech's pest control services. Our expert team uses safe and effective methods to eliminate insects, rodents, and other pests—ensuring a clean, hygienic, and pest-free environment for residential, commercial, and industrial properties.",
-      image: "https://res.cloudinary.com/diunkrydn/image/upload/v1753607445/10780550_19198459_s3ciie.svg"
+      image: "https://res.cloudinary.com/diunkrydn/raw/upload/v1753777968/Pest_afn1jz.lottie"
     },
     {
       id: 'construction',
       title: 'Construction',
       description: "Fabtech delivers reliable construction services from groundwork to finishing. Our skilled team handles residential and commercial projects with attention to quality, timelines, and safety—ensuring durable structures and seamless project execution across Qatar.",
-      image: "https://res.cloudinary.com/diunkrydn/image/upload/v1753607447/13295440_5165970_ezr2r0.svg"
+      image: "https://res.cloudinary.com/diunkrydn/raw/upload/v1753778037/Website_Under_Construction_tmkbf8.lottie"
     },
     {
       id: 'landscaping',
       title: 'Landscaping',
       description: "Transform your outdoor space with Fabtech's professional landscaping services. We design, install, and maintain beautiful gardens, lawns, and green areas for homes, businesses, and public spaces—bringing nature and aesthetic appeal to your surroundings.",
-      image: "https://res.cloudinary.com/diunkrydn/image/upload/v1753607446/7943051_3808782_uat65c.svg"
+      image: "https://res.cloudinary.com/diunkrydn/raw/upload/v1753778229/Gardener_Cutting_Tree_zdwty4.lottie"
     },
     {
       id: 'disinfection',
       title: 'Disinfection',
       description: "Keep your environment safe with Fabtech's disinfection services. Using hospital-grade disinfectants and advanced methods, we sanitize residential, office, and industrial spaces—eliminating viruses, bacteria, and pathogens for a healthier space.",
-      image: "https://res.cloudinary.com/diunkrydn/image/upload/v1753607453/8488009_3933943_haj2kt.svg"
+      image: "https://res.cloudinary.com/diunkrydn/raw/upload/v1753778225/Disinfectant_spray_n59ksc.lottie"
     },
   ];
 
@@ -604,8 +614,9 @@ const Services = () => {
 
       <ServicesContainer>
         <PageTitle>Our <span>Services</span></PageTitle>
-
+        <PageSubtitle>We provide end-to-end facility management solutions, ensuring seamless operations for your spaces. From deep cleaning and sanitization to hospitality services and construction support, our expert team delivers precision, efficiency, and reliability—so you can focus on what matters most.</PageSubtitle>
         <ServicesGrid>
+          
           {services.map((service, index) => (
             <ServiceCard
               key={service.id}
@@ -619,12 +630,22 @@ const Services = () => {
                 <ServiceCardSkeleton />
               ) : (
                 <>
-                  <ServiceImage>
-                    <img 
-                      src={service.image} 
-                      alt={service.title}
-                      loading="lazy"
-                    />
+                  <ServiceImage style={{backgroundColor: "white"}}>
+                 
+                <DotLottieReact
+                  src={service.image}
+                  loop
+                  autoplay
+                
+                
+                  style={{ 
+                    width: '100%', 
+                    height: '100%',
+                   
+
+                  }}
+                />
+        
                   </ServiceImage>
                   <ServiceContent>
                     <h2>{service.title}</h2>

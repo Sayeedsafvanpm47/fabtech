@@ -6,6 +6,7 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Clients from '../components/Clients';
 import { clientLogos } from '../constants/ClientLogos';
+import { useNavigate } from 'react-router-dom';
 
 import slide1 from '../assets/images/slide1.jpg';
 import slide2 from '../assets/images/slide2.jpg';
@@ -18,6 +19,8 @@ import { HeroSection, FeaturesSection, FeaturesGrid, FeatureCard, CTASection, Bu
 import { image } from 'framer-motion/client';
 
 const Home = () => {
+  const navigate = useNavigate();
+  
   const features = [
     {
       title: 'Deep Cleaning',
@@ -281,7 +284,7 @@ const Home = () => {
         >
           <h2>Ready to Get Started?</h2>
           <p>Join us today and experience the difference our services can make for your business.</p>
-          <Button onClick={() => window.location.href = '/contact'}>Contact Us</Button>
+          <Button onClick={() => navigate('/contact')}>Contact Us</Button>
         </motion.div>
       </CTASection>
     </>

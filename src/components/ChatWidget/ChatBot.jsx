@@ -61,6 +61,40 @@ const Message = styled.div`
   color: ${props => props.isBot ? 'var(--primary-black)' : 'white'};
   font-size: 0.9rem;
   line-height: 1.4;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+
+  p {
+    margin: 0 0 0.5rem 0;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  ul, ol {
+    margin: 0.5rem 0;
+    padding-left: 1.2rem;
+  }
+
+  li {
+    margin-bottom: 0.2rem;
+  }
+
+  strong {
+    font-weight: 600;
+  }
+
+  em {
+    font-style: italic;
+  }
+
+  code {
+    background: ${props => props.isBot ? '#e0e0e0' : 'rgba(255,255,255,0.2)'};
+    padding: 0.1rem 0.3rem;
+    border-radius: 3px;
+    font-family: monospace;
+    font-size: 0.85rem;
+  }
 `;
 
 const InputContainer = styled.div`
@@ -138,6 +172,90 @@ const LoadingDots = styled.div`
   }
 `;
 
+// Helper function to format text with basic markdown support
+const formatText = (text) => {
+  if (!text) return '';
+  
+  // Split text into paragraphs (double line breaks)
+  const paragraphs = text.split(/\n\s*\n/);
+  
+  return paragraphs.map((paragraph, pIndex) => {
+    // Handle single line breaks within paragraphs
+    const lines = paragraph.split('\n');
+    
+    return (
+      <p key={pIndex}>
+        {lines.map((line, lIndex) => {
+          // Process basic markdown formatting
+          let processedLine = line
+            // Bold text **text** or __text__
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/__(.*?)__/g, '<strong>$1</strong>')
+            // Italic text *text* or _text_
+            .replace(/\*(.*?)\*/g, '<em>$1</em>')
+            .replace(/_(.*?)_/g, '<em>$1</em>')
+            // Inline code `code`
+            .replace(/`(.*?)`/g, '<code>$1</code>');
+
+          return (
+            <span key={lIndex}>
+              <span dangerouslySetInnerHTML={{ __html: processedLine }} />
+              {lIndex < lines.length - 1 && <br />}
+            </span>
+          );
+        })}
+      </p>
+    );
+  });
+};
+
+// Component to render formatted message
+const FormattedMessage = ({ text, isBot }) => {
+  // Check if text contains list patterns
+  const hasLists = /^\s*[-*•]\s/m.test(text) || /^\s*\d+\.\s/m.test(text);
+  
+  if (hasLists) {
+    const parts = text.split(/\n(?=\s*[-*•]\s|\s*\d+\.\s)/);
+    
+    return (
+      <div>
+        {parts.map((part, index) => {
+          if (/^\s*[-*•]\s/.test(part)) {
+            // Unordered list items
+            const items = part.split(/\n(?=\s*[-*•]\s)/).filter(item => item.trim());
+            return (
+              <ul key={index}>
+                {items.map((item, itemIndex) => (
+                  <li key={itemIndex}>
+                    {item.replace(/^\s*[-*•]\s/, '').trim()}
+                  </li>
+                ))}
+              </ul>
+            );
+          } else if (/^\s*\d+\.\s/.test(part)) {
+            // Ordered list items
+            const items = part.split(/\n(?=\s*\d+\.\s)/).filter(item => item.trim());
+            return (
+              <ol key={index}>
+                {items.map((item, itemIndex) => (
+                  <li key={itemIndex}>
+                    {item.replace(/^\s*\d+\.\s/, '').trim()}
+                  </li>
+                ))}
+              </ol>
+            );
+          } else {
+            // Regular paragraph
+            return <div key={index}>{formatText(part)}</div>;
+          }
+        })}
+      </div>
+    );
+  }
+  
+  return <div>{formatText(text)}</div>;
+};
+
 const ChatBot = ({ isOpen, onClose }) => {
   const [messages, setMessages] = useState([
     { text: "Hello! I'm your AI assistant. How can I help you today?", isBot: true }
@@ -167,8 +285,8 @@ const ChatBot = ({ isOpen, onClose }) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer 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',
-          'HTTP-Referer': 'https://your-website.com',
+          'Authorization': 'Bearer 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',
+          'HTTP-Referer': 'https:www.fabtechqatar.com' || 'https://fabtech-seven.vercel.app',
           'X-Title': 'Fabtech Support Bot'
         },
         body: JSON.stringify({
@@ -176,7 +294,7 @@ const ChatBot = ({ isOpen, onClose }) => {
           messages: [
             {
               role: 'system',
-              content: 'You are a helpful customer service assistant for Fabtech, a company that provides cleaning, facility management, and related services. Be professional, friendly, and concise in your responses.'
+              content: 'You are Sayeed, a helpful customer service representative for Fabtech, a company that provides cleaning, facility management, and related services. Be professional, friendly, and concise in your responses. Format your responses with proper paragraphs and use bullet points when appropriate for better readability. Always sign your responses as "Best regards, Sayeed - Customer Service Representative, Fabtech Cleaning & Facility Services".'
             },
             {
               role: 'user',
@@ -224,7 +342,7 @@ const ChatBot = ({ isOpen, onClose }) => {
           <ChatMessages>
             {messages.map((message, index) => (
               <Message key={index} isBot={message.isBot}>
-                {message.text}
+                <FormattedMessage text={message.text} isBot={message.isBot} />
               </Message>
             ))}
             {isLoading && (
@@ -285,4 +403,4 @@ const ChatBot = ({ isOpen, onClose }) => {
   );
 };
 
-export default ChatBot; 
+export default ChatBot;

@@ -25,7 +25,7 @@ export const clientLogos = [
     },
     {
       name: 'Shoprite',
-      url: 'https://res.cloudinary.com/diunkrydn/image/upload/v1753270387/shoprite_czo1z5.avifg'
+      url: 'https://res.cloudinary.com/diunkrydn/image/upload/v1753270387/shoprite_czo1z5.avif'
     },
     {
       name: 'Mega Mart',
@@ -91,10 +91,7 @@ export const clientLogos = [
       name: 'IKEA Qatar',
       url: 'https://res.cloudinary.com/diunkrydn/image/upload/v1753270545/ikea_xuacej.png'
     },
-    {
-      name: 'Qatar Development Bank',
-      url: 'https://res.cloudinary.com/diunkrydn/image/upload/v1753193423/qdb_aqxvxz.png'
-    },
+    
     {
       name: 'DHL',
       url: 'https://res.cloudinary.com/diunkrydn/image/upload/v1753270548/dhl_ookyum.png'
