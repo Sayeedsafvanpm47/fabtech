@@ -8,7 +8,7 @@ export const HeroSection = styled.section`
   overflow: hidden;
   margin: 0;
   padding: 0;
-  margin-top: -10px;
+  
   background-color: var(--primary-red);
 
   .slick-slider {
