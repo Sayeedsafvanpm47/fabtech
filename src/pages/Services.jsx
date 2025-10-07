@@ -364,7 +364,7 @@ const Services = () => {
   const [isLoading, setIsLoading] = useState(true);
   
   // Set this to true only when you want to show the Elfsight widget
-  const showElfsightWidget = false;
+  const showElfsightWidget = true;
 
   const services = [
 
