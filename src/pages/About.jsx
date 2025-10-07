@@ -579,7 +579,7 @@ const About = () => {
         </TimelineSection>
         <Clients logos={clientLogos} />
 
-        <TestimonialSection>
+        {/* <TestimonialSection>
           <h2>What Our <span>Clients Say</span></h2>
           <TestimonialGrid>
             {testimonials.map((testimonial, index) => (
@@ -605,7 +605,7 @@ const About = () => {
               </TestimonialCard>
             ))}
           </TestimonialGrid>
-        </TestimonialSection>
+        </TestimonialSection> */}
       </AboutContainer>
     </>
   );
