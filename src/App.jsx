@@ -36,11 +36,11 @@ function App() {
             <Route path="/services" element={<Services />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/blog/:slug" element={<BlogPost />} />
+            {/* <Route path="/blog" element={<Blog />} /> */}
+            {/* <Route path="/blog/:slug" element={<BlogPost />} />
             <Route path="/admin-login" element={<AdminLogin />} />
             <Route path="/post-blog" element={<PostBlog />} />
-            <Route path="/edit-blog/:id" element={<EditBlog />} />
+            <Route path="/edit-blog/:id" element={<EditBlog />} /> */}
           </Routes>
         </MainContent>
         <Footer />

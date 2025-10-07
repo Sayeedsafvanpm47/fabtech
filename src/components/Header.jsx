@@ -32,6 +32,18 @@ const Logo = styled(Link)`
   color: var(--primary-black);
   font-size: 1.5rem;
   font-weight: 700;
+  img {
+    width: 80%;
+    height: 80%;
+    object-fit: contain;
+    border-radius: 20px;
+  }
+    @media (max-width: 768px) {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+      border-radius: 30px;
   text-decoration: none;
 `;
 
@@ -102,7 +114,7 @@ const Header = () => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <Logo to="/">Fabtech Services W.L.L</Logo>
+          <Logo to="/"><img src="https://res.cloudinary.com/diunkrydn/image/upload/v1759834153/fab_full_logo_x5zlzu.png" alt="Fabtech Services W.L.L" /></Logo>
         </motion.div>
 
         <MenuButton onClick={toggleMenu}>
@@ -115,7 +127,7 @@ const Header = () => {
             { path: '/services', label: 'Services' },
             { path: '/about', label: 'About' },
             { path: '/contact', label: 'Contact' },
-            { path: '/blog', label: 'Blog' },
+            // { path: '/blog', label: 'Blog' },
           ].map((link) => (
             <motion.div
               key={link.path}
