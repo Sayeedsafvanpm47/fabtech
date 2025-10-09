@@ -7,6 +7,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import Clients from '../components/Clients';
 import { clientLogos } from '../constants/ClientLogos';
 import { useNavigate } from 'react-router-dom';
+import DownloadBrochure from '../components/Brochure';
 
 import slide1 from '../assets/images/slide1.jpg';
 import slide2 from '../assets/images/slide2.jpg';
@@ -168,7 +169,8 @@ const Home = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.4 }}
                   >
-                    <Button>Get Started</Button>
+                 
+                    <DownloadBrochure />
                   </motion.div>
                 </HeroContent>
               </SlideContent>
